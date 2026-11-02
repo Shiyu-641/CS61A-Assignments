@@ -32,6 +32,10 @@ def product(n, term):
     162
     """
     "*** YOUR CODE HERE ***"
+    k, mul = 1, 1
+    while k <= n:
+        mul, k = mul * term(k), k + 1
+    return mul
 
 
 def accumulate(fuse, start, n, term):
@@ -54,6 +58,10 @@ def accumulate(fuse, start, n, term):
     19
     """
     "*** YOUR CODE HERE ***"
+    res, k = start, 1
+    while k <= n:
+        res, k = fuse(res, term(k)), k + 1
+    return res
 
 
 def summation_using_accumulate(n, term):
@@ -68,7 +76,7 @@ def summation_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(summation_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    return ____
+    return accumulate(add, 0, n, term)
 
 
 def product_using_accumulate(n, term):
@@ -83,7 +91,7 @@ def product_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(product_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    return ____
+    return product(n, term)
 
 
 def make_repeater(f, n):
@@ -100,4 +108,9 @@ def make_repeater(f, n):
     390625
     """
     "*** YOUR CODE HERE ***"
-
+    def multiple(m):
+        k, anwser = 1, f(m)
+        while k < n:
+            anwser, k = f(anwser), k + 1
+        return anwser
+    return multiple
