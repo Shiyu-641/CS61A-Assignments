@@ -25,6 +25,16 @@ def num_eights(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n < 10:
+        if n == 8:
+            return 1
+        else:
+            return 0
+    else:
+        if n % 10 == 8:
+            return num_eights(n // 10) + 1
+        else:
+            return num_eights(n // 10)
 
 
 def digit_distance(n):
@@ -47,6 +57,10 @@ def digit_distance(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n < 10:
+        return 0
+    else:
+        return digit_distance(n // 10) + abs((n % 10) - (n // 10 % 10))
 
 
 def interleaved_sum(n, odd_func, even_func):
@@ -71,7 +85,15 @@ def interleaved_sum(n, odd_func, even_func):
     True
     """
     "*** YOUR CODE HERE ***"
+    def odd_sum(k):
+        if k > n:
+            return 0
+        elif k == n:
+            return odd_func(k)
+        else:
+            return odd_sum(k + 2) + even_func(k + 1) + odd_func(k)
 
+    return odd_sum(1)   
 
 def next_smaller_dollar(bill):
     """Returns the next smaller bill in order."""
@@ -107,7 +129,19 @@ def count_dollars(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def count(cash, max_change = 100):
+        if cash == 0:
+            return 1
+        elif cash < 0:
+            return 0
+        elif max_change == None:
+            return 0
+        else:
+            with_max_change = count(cash - max_change, max_change)
+            without_max_change = count(cash, next_smaller_dollar(max_change))
+            return with_max_change + without_max_change
 
+    return count(total)
 
 def next_larger_dollar(bill):
     """Returns the next larger bill in order."""
@@ -143,7 +177,19 @@ def count_dollars_upward(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def count(cash, min_change = 1):
+        if cash == 0:
+            return 1
+        elif cash < 0:
+            return 0
+        elif min_change == None:
+            return 0
+        else:
+            with_min_change = count(cash - min_change, min_change)
+            without_min_change = count(cash, next_larger_dollar(min_change))
+            return with_min_change + without_min_change
 
+    return count(total)
 
 def print_move(origin, destination):
     """Print instructions to move a disk."""
@@ -178,6 +224,14 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
+    if n == 1:
+        print_move(start, end)
+        return
+    else: 
+        transform = 6 - start - end
+        move_stack(n - 1, start, transform)
+        move_stack(1, start, end)
+        move_stack(n - 1, transform, end)
 
 
 from operator import sub, mul
@@ -193,5 +247,21 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return (lambda f: lambda k: f(f, k))(lambda f, k: k if k == 1 else mul(k, f(f, sub(k, 1))))
+    # Alternate solution:
+    # return (lambda f: f(f))(lambda f: lambda x: 1 if x == 0 else x * f(f)(x - 1))
+
+# fact = lambda n: 1 if n == 1 else mul(n, fact(sub(n, 1)))
+
+# def fact(self, n):
+#     if n == 1:
+#         return 1
+#     else:
+#         return n * self(self, n - 1)
+
+# fact(fact, 5)
+
+# lambda f: lambda n: 1 if n == 1 else mul(n, f(f, sub(n, 1)))
+# lambda f: lambda k: f(f, k)
+
 
